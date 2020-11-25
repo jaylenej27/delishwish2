@@ -1,11 +1,12 @@
 import { Recipe } from '../generated/apollo-components';
-import { Row, Col, List } from 'antd';
+import { Row, Col, List, Checkbox } from 'antd';
 import styled from 'styled-components';
 import GraphImg from 'graphcms-image';
 import * as _ from 'lodash';
 import { generateUnit } from '../utils/generateUnit';
 import { GenerateContent } from './GenerateContent';
 import { LikeButton } from './LikeButton';
+import { useState } from 'react';
 
 const StyledOneRecipe = styled(Col)`
   ${({ theme }) => `
@@ -46,6 +47,12 @@ const StyledOneRecipe = styled(Col)`
 export const OneRecipe = ({ recipe }: { recipe: Recipe }) => {
   const { image, title, description, content, userLikes, id } = recipe;
   const ingredients = _.get(recipe, 'ingredients');
+
+  const [shoppingList, setShoppingList] = useState([]);
+
+  function onChange(checkedValues) {
+    console.log('checked = ', checkedValues);
+  }
   return (
     <Row>
       <StyledOneRecipe
@@ -74,12 +81,17 @@ export const OneRecipe = ({ recipe }: { recipe: Recipe }) => {
                 ingredients || [{ type: 'None added', amount: 0, unit: '' }]
               }
               renderItem={({ amount, unit, type }) => {
+          
                 return (
+                  <>
                   <List.Item>
+                    <Checkbox onChange={onChange}>
                     {ingredients
                       ? `${amount} ${generateUnit(unit, amount)} ${type}`
                       : `${type}`}
-                  </List.Item>
+                      </Checkbox>
+                  </List.Item>                
+                  </>
                 );
               }}
             ></List>
